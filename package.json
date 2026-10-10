@@ -6,13 +6,18 @@
     "stage": "ts-node-dev --respawn --transpile-only src/app.ts",
     "build": "tsc -p tsconfig.json",
     "proto:generate": "pnpm exec protoc --plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=src/contracts/proto --ts_proto_opt=outputServices=grpc-js,useExactTypes=false,esModuleInterop=true --proto_path=../../proto/ ../../proto/*.proto ../../proto/**/*.proto",
+    "prisma:generate": "npx prisma generate",
     "start": "node ./dist/app.js",
+    "migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "migrate:reset": "prisma migrate reset",
     "test": "jest"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "jest": "^30.3.0",
     "nodemon": "^3.1.14",
+    "prisma": "^6.19.3",
     "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
@@ -24,7 +29,15 @@
     "@grpc/grpc-js": "^1.14.3",
     "@bufbuild/protobuf": "^2.11.0",
     "@shared/grpc-client-manager": "workspace:*",
+    "@shared/kafka-manager": "workspace:*",
     "@shared/logger": "workspace:*",
-    "@shared/errors": "workspace:*"
+    "@shared/pg-boss-manager": "workspace:*",
+    "@shared/errors": "workspace:*",
+    "@prisma/client": "^6.19.3",
+    "kafkajs": "^2.2.4",
+    "pg-boss": "^12.15.0"
+  },
+  "prisma": {
+    "schema": "./src/infrastructure/db/prisma/schema.prisma"
   }
 }
