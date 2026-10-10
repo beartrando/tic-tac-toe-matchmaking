@@ -1,5 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
 import * as matchmakingProto from '../../../contracts/proto/matchmaking';
+import * as battleProto from '../../../contracts/proto/battle';
 import logger from "@shared/logger";
 import BattleInitUseCase from "../../../application/use-cases/battle/battle-init";
 import callbackError from "./callback.error";
@@ -15,8 +16,8 @@ export class MatchmakingHandler {
     }
 
     async init(
-        call: grpc.ServerUnaryCall<matchmakingProto.BattleInitRequest, matchmakingProto.BattleResponse>,
-        callback: grpc.sendUnaryData<matchmakingProto.BattleResponse>
+        call: grpc.ServerUnaryCall<matchmakingProto.BattleInitRequest, battleProto.BattleResponse>,
+        callback: grpc.sendUnaryData<battleProto.BattleResponse>
     ) {
 
         try {
@@ -24,18 +25,12 @@ export class MatchmakingHandler {
 
             const battle = await this.initUseCase.execute(new ProfileId(profileId), battleId ? new BattleId(battleId) : null);
 
-            const result = matchmakingProto.BattleResponse.create({battle: MatchmakingProtoMapper.toProto(battle)});
-
-            logger.log(result);
-
-            if (!result) {
-                throw new Error('Battle');
-            }
+            const result = battleProto.BattleResponse.create({battle: MatchmakingProtoMapper.toProto(battle)});
 
             callback(null, result);
 
         } catch (err: any) {
-            logger.log(err);
+            logger.error("Matchmaking init failed", err);
             callbackError(callback, err);
         }
     }

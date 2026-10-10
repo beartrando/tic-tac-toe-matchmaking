@@ -1,4 +1,3 @@
-import Board from "./value-objects/battle-board.vo";
 import BattlePlayerIds from "./value-objects/battle-player-ids.vo";
 import BattleStatus from "./value-objects/battle-status.vo";
 import BattleStatusEnum from "./enums/battle-status.enum";
