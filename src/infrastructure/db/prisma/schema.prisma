@@ -8,3 +8,32 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DATABASE_DIRECT_URL")
 }
+
+enum BattleCellValue {
+  X
+  O
+  EMPTY
+}
+
+enum BattleStatus {
+  Created
+  Matched
+  Ready
+  Started
+  Finished
+  Cancelled
+  TimeOut
+}
+
+model Battle {
+  id         String            @id @default(uuid())
+  playerIds  String[]          @map("player_ids")
+  board      BattleCellValue[] @map("board")
+  status     BattleStatus      @map("status")
+  winnerId   String?           @map("winner_id")
+  lastMoveAt DateTime?         @default(now()) @map("last_move_at")
+  createdAt  DateTime          @default(now()) @map("created_at")
+  updatedAt  DateTime          @updatedAt @map("updated_at")
+
+  @@map("battles")
+}

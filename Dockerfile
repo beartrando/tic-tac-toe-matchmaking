@@ -16,6 +16,7 @@ COPY tsconfig.base.json ./
 
 COPY services/matchmaking/package*.json ./services/matchmaking/
 COPY services/matchmaking/jest.config.js ./services/matchmaking/
+COPY services/matchmaking/jest.setup.ts ./services/matchmaking/
 COPY services/matchmaking/tsconfig.json ./services/matchmaking/
 COPY services/matchmaking/jest.setup.ts ./services/matchmaking/
 COPY services/matchmaking/src ./services/matchmaking/src/
