@@ -8,10 +8,7 @@ import ProfileId from "../profile/value-objects/profile-id.vo";
 export type BattleEntityProps = {
     id?: BattleId;
     playerIds: BattlePlayerIds;
-    board?: Board;
     status?: BattleStatus;
-    winnerId?: ProfileId | null;
-    lastMoveAt?: Date | null;
     createdAt?: Date;
     updatedAt?: Date;
 };
@@ -20,10 +17,7 @@ export class BattleEntity {
     constructor(
         readonly id: BattleId,
         readonly playerIds: BattlePlayerIds,
-        readonly board: Board,
         public status: BattleStatus,
-        readonly winnerId: ProfileId | null,
-        readonly lastMoveAt: Date | null,
         readonly createdAt: Date,
         readonly updatedAt: Date,
     ) {
@@ -35,10 +29,7 @@ export class BattleEntity {
         return new BattleEntity(
             props.id ?? BattleId.create(),
             props.playerIds,
-            props.board ?? Board.empty(),
             props.status ?? new BattleStatus(BattleStatusEnum.Created),
-            props.winnerId ?? null,
-            props.lastMoveAt ?? null,
             props.createdAt ?? now,
             props.updatedAt ?? now,
         );
