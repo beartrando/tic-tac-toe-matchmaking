@@ -14,10 +14,10 @@ COPY package.json ./
 COPY pnpm-workspace.yaml ./
 COPY tsconfig.base.json ./
 
-COPY services/service-template/package*.json ./services/service-template/
-COPY services/service-template/jest.config.js ./services/service-template/
-COPY services/service-template/tsconfig.json ./services/service-template/
-COPY services/service-template/src ./services/service-template/src/
+COPY services/matchmaking/package*.json ./services/matchmaking/
+COPY services/matchmaking/jest.config.js ./services/matchmaking/
+COPY services/matchmaking/tsconfig.json ./services/matchmaking/
+COPY services/matchmaking/src ./services/matchmaking/src/
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -37,8 +37,8 @@ FROM base AS deps
 RUN pnpm fetch
 RUN pnpm install --offline --frozen-lockfile --ignore-scripts
 
-RUN mkdir -p ./services/service-template/src/contracts/proto
-RUN pnpm --filter service-template proto:generate
+RUN mkdir -p ./services/matchmaking/src/contracts/proto
+RUN pnpm --filter matchmaking proto:generate
 
 RUN pnpm --filter @shared/logger build
 RUN pnpm --filter @shared/grpc-client-manager build
@@ -48,7 +48,7 @@ RUN pnpm --filter @shared/errors build
 # ---------- DEV ----------
 FROM deps AS dev
 
-COPY services/service-template/tsconfig.test.json ./services/service-template/
+COPY services/matchmaking/tsconfig.test.json ./services/matchmaking/
 
 ENV NODE_ENV=development
 
@@ -58,7 +58,7 @@ USER node
 
 EXPOSE 50051
 
-CMD ["pnpm", "--filter", "service-template", "dev"]
+CMD ["pnpm", "--filter", "matchmaking", "dev"]
 
 HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
   CMD nc -z localhost 50051 || exit 1
@@ -68,9 +68,9 @@ FROM deps AS build
 
 ENV NODE_ENV=production
 
-RUN pnpm --filter service-template build
+RUN pnpm --filter matchmaking build
 
-RUN pnpm --filter service-template deploy /deploy --prod
+RUN pnpm --filter matchmaking deploy /deploy --prod
 
 # ---------- PROD ----------
 FROM node:22-slim AS prod

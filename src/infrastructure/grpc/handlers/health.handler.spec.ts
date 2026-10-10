@@ -53,7 +53,7 @@ describe('HealthHandler', () => {
     describe('check', () => {
         it('should call healthUseCase and return response', async () => {
             const mockResponse: healthProto.HealthReport = {
-                service: 'service-template',
+                service: 'matchmaking',
                 status: healthProto.HealthStatus.HEALTH_STATUS_OK,
                 components: {},
                 timestamp: new Date(),
@@ -83,7 +83,7 @@ describe('HealthHandler', () => {
     describe('status', () => {
         it('should call statusUseCase and return response', async () => {
             const mockResponse: healthProto.ServiceStatus = {
-                name: 'service-template',
+                name: 'matchmaking',
                 version: 'undefined',
                 env: 'production',
                 uptime: {seconds: 100, nanos: 0},

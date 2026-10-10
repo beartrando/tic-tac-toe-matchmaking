@@ -11,7 +11,7 @@ describe('HealthUseCase', () => {
     it('should return HEALTH_STATUS_OK with service name', async () => {
         const result = await healthUseCase.execute();
 
-        expect(result.service).toBe('service-template');
+        expect(result.service).toBe('matchmaking');
         expect(result.status).toBe(healthProto.HealthStatus.HEALTH_STATUS_OK);
         expect(result.components).toEqual({});
         expect(result.timestamp).toBeInstanceOf(Date);

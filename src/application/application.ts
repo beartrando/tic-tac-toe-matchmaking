@@ -22,12 +22,12 @@ export class Application {
         try {
             await this.grpcService.start();
             logger.info(
-                '🚀 ServiceTemplate service started',
+                '🚀 Matchmaking service started',
             );
         } catch (err) {
             logger.error(
                 {err},
-                '💥 Failed to start ServiceTemplate service',
+                '💥 Failed to start Matchmaking service',
             );
             process.exit(1);
         }
