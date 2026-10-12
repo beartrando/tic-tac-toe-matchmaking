@@ -10,4 +10,3 @@ debug: jest.fn(),
 
 // Global test timeout
 jest.setTimeout(10000);
-
