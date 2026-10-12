@@ -11,6 +11,9 @@ export class MatchmakingProtoMapper {
         return battleProto.BattleObject.create({
             id: battle.id.value,
             playerIds: battle.playerIds.value.map(id => id.value),
+            // matchmaking does not track the board itself, but consumers (engine, bot)
+            // expect a full 9-cell board; battles here are always fresh -> empty board
+            board: Array(9).fill(battleProto.BattleCellValue.CELL_EMPTY),
             status: BattleStatusProtoMapper.toProto(battle.status),
             createdAt: battle.createdAt,
             updatedAt: battle.updatedAt,
