@@ -6,10 +6,11 @@ import ProfileId from "../../../domain/profile/value-objects/profile-id.vo";
 import BattleStatusProtoMapper from "./battle/battle-status.proto.mapper";
 
 export class MatchmakingProtoMapper {
-    static toProto(battle: BattleEntity): battleProto.BattleObject {
+    static toProto(battle: BattleEntity, trackId?: string): battleProto.BattleObject {
 
         return battleProto.BattleObject.create({
             id: battle.id.value,
+            trackId,
             playerIds: battle.playerIds.value.map(id => id.value),
             status: BattleStatusProtoMapper.toProto(battle.status),
             createdAt: battle.createdAt,
