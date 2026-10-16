@@ -15,7 +15,7 @@ export class BattleInitUseCase {
     ) {
     }
 
-    async execute(profileId: ProfileId, battleId?: BattleId | null): Promise<BattleEntity> {
+    async execute(profileId: ProfileId, battleId?: BattleId | null, trackId?: string): Promise<BattleEntity> {
         if (battleId) {
             let battle: BattleEntity | null;
             try {
@@ -59,7 +59,7 @@ export class BattleInitUseCase {
             }
         }
 
-        const newBattle = BattleEntity.createNew(profileId);
+        const newBattle = BattleEntity.create({trackId: trackId});
         const battle = await this.battleRepository.save(newBattle);
 
         return battle;
