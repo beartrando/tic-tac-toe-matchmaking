@@ -1,3 +1,4 @@
+import * as battleProto from "../../../contracts/proto/battle";
 import BattleRepository from "../../../domain/battle/battle.repository";
 import BattleEntity from "../../../domain/battle/battle.entity";
 import JobService from "../../../infrastructure/job/service";
@@ -67,7 +68,13 @@ export class BattleInitUseCase {
 
     private enqueue(battle: BattleEntity, trackId?: string): void {
         if (battle.status.value == BattleStatusEnum.Matched) {
-            this.jobService.enqueue(this.matchmakingMatchedTopic, MatchmakingProtoMapper.toProto(battle, trackId));
+            this.jobService.enqueue(
+                this.matchmakingMatchedTopic,
+                battleProto.TracedBattle.create({
+                    trackId,
+                    battle: MatchmakingProtoMapper.toProto(battle),
+                }),
+            );
         }
     }
 }

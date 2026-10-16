@@ -85,12 +85,12 @@ describe('BattleInitUseCase', () => {
     });
 
     describe('join по battleId', () => {
-        it('присоединяется к указанному баттлу и публикует matchmaking.matched', async () => {
+        it('присоединяется к указанному баттлу и публикует matchmaking.matched как TracedBattle', async () => {
             const matched = makeBattle('battle-1', ['profile-1', 'profile-2'], BattleStatusEnum.Matched);
 
             repository.join.mockResolvedValue(matched);
 
-            const result = await useCase.execute(makeProfile('profile-2'), new BattleId('battle-1'));
+            const result = await useCase.execute(makeProfile('profile-2'), new BattleId('battle-1'), 'track-1');
 
             expect(repository.join).toHaveBeenCalledWith(
                 expect.objectContaining({value: 'profile-2'}),
@@ -99,7 +99,26 @@ describe('BattleInitUseCase', () => {
             expect(result.status.value).toBe(BattleStatusEnum.Matched);
             expect(jobService.enqueue).toHaveBeenCalledWith(
                 MATCHMAKING_MATCHED_TOPIC,
-                expect.objectContaining({id: 'battle-1'}),
+                expect.objectContaining({
+                    trackId: 'track-1',
+                    battle: expect.objectContaining({id: 'battle-1'}),
+                }),
+            );
+        });
+
+        it('публикует TracedBattle с пустым trackId, если track не передан', async () => {
+            const matched = makeBattle('battle-1', ['profile-1', 'profile-2'], BattleStatusEnum.Matched);
+
+            repository.join.mockResolvedValue(matched);
+
+            await useCase.execute(makeProfile('profile-2'), new BattleId('battle-1'));
+
+            expect(jobService.enqueue).toHaveBeenCalledWith(
+                MATCHMAKING_MATCHED_TOPIC,
+                expect.objectContaining({
+                    trackId: '',
+                    battle: expect.objectContaining({id: 'battle-1'}),
+                }),
             );
         });
 

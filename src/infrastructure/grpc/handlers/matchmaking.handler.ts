@@ -1,3 +1,4 @@
+import {randomUUID} from 'crypto';
 import * as grpc from '@grpc/grpc-js';
 import * as matchmakingProto from '../../../contracts/proto/matchmaking';
 import * as battleProto from '../../../contracts/proto/battle';
@@ -21,11 +22,15 @@ export class MatchmakingHandler {
     ) {
 
         try {
-            const {profileId, battleId, trackId} = call.request;
+            const {profileId, battleId} = call.request;
+            const trackId = call.request.trackId || randomUUID();
 
             const battle = await this.initUseCase.execute(new ProfileId(profileId), battleId ? new BattleId(battleId) : null, trackId);
 
-            const result = battleProto.BattleResponse.create({battle: MatchmakingProtoMapper.toProto(battle, trackId)});
+            const result = battleProto.BattleResponse.create({
+                battle: MatchmakingProtoMapper.toProto(battle),
+                trackId,
+            });
 
             callback(null, result);
 
