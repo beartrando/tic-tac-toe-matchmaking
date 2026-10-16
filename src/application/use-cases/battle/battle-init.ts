@@ -28,7 +28,7 @@ export class BattleInitUseCase {
                 throw new NotFoundError('battle ' + battleId.value);
             }
 
-            this.enqueue(battle);
+            this.enqueue(battle, trackId);
 
             return battle;
         }
@@ -51,7 +51,7 @@ export class BattleInitUseCase {
             try {
                 const battle = await this.battleRepository.join(profileId, existingSomebodiesBattle.id);
                 if (battle) {
-                    this.enqueue(battle);
+                    this.enqueue(battle, trackId);
                     return battle;
                 }
             } catch (e) {
@@ -59,15 +59,15 @@ export class BattleInitUseCase {
             }
         }
 
-        const newBattle = BattleEntity.create({trackId: trackId});
+        const newBattle = BattleEntity.createNew(profileId);
         const battle = await this.battleRepository.save(newBattle);
 
         return battle;
     }
 
-    private enqueue(battle: BattleEntity): void {
+    private enqueue(battle: BattleEntity, trackId?: string): void {
         if (battle.status.value == BattleStatusEnum.Matched) {
-            this.jobService.enqueue(this.matchmakingMatchedTopic, MatchmakingProtoMapper.toProto(battle));
+            this.jobService.enqueue(this.matchmakingMatchedTopic, MatchmakingProtoMapper.toProto(battle, trackId));
         }
     }
 }

@@ -25,7 +25,7 @@ export class MatchmakingHandler {
 
             const battle = await this.initUseCase.execute(new ProfileId(profileId), battleId ? new BattleId(battleId) : null, trackId);
 
-            const result = battleProto.BattleResponse.create({battle: MatchmakingProtoMapper.toProto(battle)});
+            const result = battleProto.BattleResponse.create({battle: MatchmakingProtoMapper.toProto(battle, trackId)});
 
             callback(null, result);
 
